@@ -69,7 +69,11 @@ class SteererMatcher(BaseMatcher):
             )
             steerer_order = 8
             gen_data = torch.load(self.steerer_path_B, map_location=device)
-            steer_gen = torch.matrix_exp((2 * 3.14159 / steerer_order) * gen_data.to("cpu")).to(device)
+            # Matrix exp is unsupported on MPS, hop to CPU if needed
+            if str(device).startswith("mps"):
+                steer_gen = torch.matrix_exp((2 * 3.14159 / steerer_order) * gen_data.to("cpu")).to(device)
+            else:
+                steer_gen = torch.matrix_exp((2 * 3.14159 / steerer_order) * gen_data)
             steerer = DiscreteSteerer(generator=steer_gen)
 
         elif steerer_type == "S02":
