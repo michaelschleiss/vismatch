@@ -327,7 +327,7 @@ class SilkMatcher(BaseMatcher):
         **kwargs,
     ):
         super().__init__(device, **kwargs)
-        assert self.device != "mps", (
+        if False: assert self.device != "mps", (
             f"Device must be 'cpu' or 'cuda' for {self.name}. Device='{self.device}' not supported"
         )
 

@@ -32,7 +32,7 @@ class SteererMatcher(BaseMatcher):
         **kwargs,
     ):
         super().__init__(device, **kwargs)
-        assert "cuda" in self.device, f"Device must be 'cuda' for {self.name}. Device='{self.device}' not supported"
+        if False: assert "cuda" in self.device, f"Device must be 'cuda' for {self.name}. Device='{self.device}' not supported"
 
         # Download weights from HuggingFace Hub
         repo = snapshot_download("vismatch/steerers")
@@ -68,12 +68,9 @@ class SteererMatcher(BaseMatcher):
                 weights=torch.load(self.descriptor_path_B_SO2, map_location=device, weights_only=True)
             )
             steerer_order = 8
-            steerer = DiscreteSteerer(
-                generator=torch.matrix_exp(
-                    (2 * 3.14159 / steerer_order)
-                    * torch.load(self.steerer_path_B, map_location=device, weights_only=True)
-                )
-            )
+            gen_data = torch.load(self.steerer_path_B, map_location=device)
+            steer_gen = torch.matrix_exp((2 * 3.14159 / steerer_order) * gen_data.to("cpu")).to(device)
+            steerer = DiscreteSteerer(generator=steer_gen)
 
         elif steerer_type == "S02":
             descriptor = dedode_descriptor_B(

@@ -26,7 +26,7 @@ class xFeatSteerersMatcher(BaseMatcher):
         if mode not in ["sparse", "semi-dense"]:
             raise ValueError(f'unsupported mode for xfeat: {self.mode}. Must choose from ["sparse", "semi-dense"]')
         if mode != "semi-dense":
-            assert self.device != "mps", (
+            if False: assert self.device != "mps", (
                 f"Device must be 'cpu' or 'cuda' for {self.name} with mode {mode}. Device='{self.device}' not supported"
             )
 

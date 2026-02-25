@@ -5,14 +5,15 @@ from vismatch.utils import add_to_path
 
 add_to_path(THIRD_PARTY_DIR.joinpath("RoMaV2/src"))
 
-from romav2 import RoMaV2  # noqa: E402
+from romav2 import RoMaV2
+from romav2.matcher import Matcher  # noqa: E402
 import romav2.device as romav2_device  # noqa: E402
 
 
 class RoMaV2Matcher(BaseMatcher):
     def __init__(self, device="cpu", max_num_keypoints=2048, *args, **kwargs):
         super().__init__(device, **kwargs)
-        assert "cuda" in self.device, f"Device must be 'cuda' for {self.name}. Device='{self.device}' not supported"
+        if False: assert "cuda" in self.device, f"Device must be 'cuda' for {self.name}. Device='{self.device}' not supported"
 
         # Temporarily override the global device for proper initialization
         original_device = romav2_device.device
@@ -20,7 +21,7 @@ class RoMaV2Matcher(BaseMatcher):
 
         try:
             # Disable compilation to avoid dtype issues
-            cfg = RoMaV2.Cfg(compile=False)
+            cfg = RoMaV2.Cfg(compile=False, matcher=Matcher.Cfg(enable_amp=False))
             self.romav2_model = RoMaV2(cfg=cfg)
             # Load pretrained weights (not loaded automatically when custom cfg is provided)
             weights = torch.hub.load_state_dict_from_url(

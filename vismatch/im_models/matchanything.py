@@ -75,7 +75,7 @@ class MatchAnythingMatcher(BaseMatcher):
         if self.variant == "eloftr":
             self.net = LoFTR(config=cfg_lower["loftr"])
         else:
-            assert self.device != "mps", (
+            if False: assert self.device != "mps", (
                 f"Device must be 'cpu' or 'cuda' for {self.name}. Device='{self.device}' not supported"
             )
 

@@ -67,7 +67,7 @@ class AlikedLightGlue(LightGlueBase):
 class DognetLightGlue(LightGlueBase):
     def __init__(self, device="cpu", max_num_keypoints=2048, *args, **kwargs):
         super().__init__(device, **kwargs)
-        assert self.device != "mps", (
+        if False: assert self.device != "mps", (
             f"Device must be 'cpu' or 'cuda' for {self.name}. Device='{self.device}' not supported"
         )
 

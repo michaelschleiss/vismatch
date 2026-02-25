@@ -16,6 +16,8 @@ class LiftFeatMatcher(BaseMatcher):
         self.detect_threshold = detect_threshold
         weights_path = f"{snapshot_download('vismatch/liftfeat')}/liftfeat.pth"
         self.model = LiftFeat(weight=weights_path, detect_threshold=self.detect_threshold)
+        self.model.to(device)
+        self.model.device = torch.device(device)
 
     def preprocess(self, img):
         "LiftFeat requires input as raw ndarray (result of cv2.imread)"

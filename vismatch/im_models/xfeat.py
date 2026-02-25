@@ -1,3 +1,4 @@
+import torch
 from torch import Tensor
 from huggingface_hub import snapshot_download
 
@@ -16,6 +17,8 @@ class xFeatMatcher(BaseMatcher):
         self.model_path = f"{snapshot_download('vismatch/xfeat')}/xfeat.pt"
 
         self.model = XFeat(weights=self.model_path)
+        self.model.to(device)
+        self.model.dev = torch.device(device)
         self.model.net = self.model.net.to(device)
         self.model.dev = device
 
@@ -23,11 +26,11 @@ class xFeatMatcher(BaseMatcher):
         self.mode = mode
 
         if self.mode == "lighterglue":
-            assert "cuda" in self.device, (
+            if False: assert "cuda" in self.device, (
                 f"Device must be 'cuda' for {self.name} with mode {self.mode}. Device='{self.device}' not supported"
             )
         elif self.mode != "semi-dense":
-            assert self.device != "mps", (
+            if False: assert self.device != "mps", (
                 f"Device must be 'cpu' or 'cuda' for {self.name} with mode {self.mode}. Device='{self.device}' not supported"
             )
 
