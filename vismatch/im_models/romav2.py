@@ -21,7 +21,7 @@ class RoMaV2Matcher(BaseMatcher):
 
         try:
             # Disable compilation to avoid dtype issues
-            cfg = RoMaV2.Cfg(compile=False, matcher=Matcher.Cfg(enable_amp=False))
+            cfg = RoMaV2.Cfg(compile=False, matcher=Matcher.Cfg(enable_amp=torch.cuda.is_available()))
             self.romav2_model = RoMaV2(cfg=cfg)
             # Load pretrained weights (not loaded automatically when custom cfg is provided)
             weights = torch.hub.load_state_dict_from_url(
